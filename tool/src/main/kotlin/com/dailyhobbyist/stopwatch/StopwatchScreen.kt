@@ -135,64 +135,75 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                     },
                 )
 
-                // ---- big time display, centred like the LightOS Timer ----
-                // Tap = start/stop, double-tap = lap. The toggle fires after a
-                // short fuse so the second tap of a double can cancel it and
-                // lap instead — the watch never visibly pauses mid-double-tap.
-                val scope = rememberCoroutineScope()
-                val pendingToggle = remember { mutableStateOf<Job?>(null) }
+                // ---- content zone: everything between the bars. The bar
+                // itself is OUTSIDE this box, hard-anchored to the bottom.
                 Box(
                     modifier = Modifier
-                        .weight(1.4f)
-                        .fillMaxWidth()
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onTap = {
-                                    val pending = pendingToggle.value
-                                    if (pending?.isActive == true) {
-                                        // second tap of a double: light tick + lap
-                                        pending.cancel()
-                                        pendingToggle.value = null
-                                        haptic()
-                                        viewModel.lap()
-                                    } else {
-                                        // every tap buzzes immediately (chats'
-                                        // double-tap feel); the toggle itself
-                                        // waits on the fuse so a double-tap
-                                        // never shows a paused frame
-                                        haptic()
-                                        pendingToggle.value = scope.launch {
-                                            delay(200L)
-                                            viewModel.startStop()
-                                        }
-                                    }
-                                },
-                            )
-                        },
-                    contentAlignment = Alignment.Center,
+                        .weight(1f)
+                        .fillMaxWidth(),
                 ) {
-                    FixedWidthTime(
-                        text = formatTime(elapsed),
-                        style = LightThemeTokens.typography.title,
-                        scale = landscapeScale,
-                    )
-                }
-
-                // ---- laps: exactly three rows visible, scrollbar only past that ----
-                // the live row reads the State itself, so the 30 fps ticker
-                // doesn't recompose the list — only that one row
-                // no laps yet: the panel isn't composed at all (a LazyColumn
-                // would still fill the space), so the timer centres in the
-                // full content area
-                if (laps.isNotEmpty()) {
-                    LapList(
-                        elapsedState = elapsedState,
-                        isRunning = isRunning,
-                        laps = laps,
+                    Column(modifier = Modifier.fillMaxSize()) {
+                // ---- big time display, centred like the LightOS Timer ----
+                    // Tap = start/stop, double-tap = lap. The toggle fires after a
+                    // short fuse so the second tap of a double can cancel it and
+                    // lap instead — the watch never visibly pauses mid-double-tap.
+                    val scope = rememberCoroutineScope()
+                    val pendingToggle = remember { mutableStateOf<Job?>(null) }
+                    Box(
                         modifier = Modifier
+                            .weight(1.4f)
                             .fillMaxWidth()
-                            .weight(1f),
-                    )
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onTap = {
+                                        val pending = pendingToggle.value
+                                        if (pending?.isActive == true) {
+                                            // second tap of a double: light tick + lap
+                                            pending.cancel()
+                                            pendingToggle.value = null
+                                            haptic()
+                                            viewModel.lap()
+                                        } else {
+                                            // every tap buzzes immediately (chats'
+                                            // double-tap feel); the toggle itself
+                                            // waits on the fuse so a double-tap
+                                            // never shows a paused frame
+                                            haptic()
+                                            pendingToggle.value = scope.launch {
+                                                delay(200L)
+                                                viewModel.startStop()
+                                            }
+                                        }
+                                    },
+                                )
+                            },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        FixedWidthTime(
+                            text = formatTime(elapsed),
+                            style = LightThemeTokens.typography.title,
+                            scale = landscapeScale,
+                        )
+                    }
+
+                    // ---- laps: exactly three rows visible, scrollbar only past that ----
+                    // the live row reads the State itself, so the 30 fps ticker
+                    // doesn't recompose the list — only that one row
+                    // no laps yet: the panel isn't composed at all (a LazyColumn
+                    // would still fill the space), so the timer centres in the
+                    // full content area
+                    if (laps.isNotEmpty()) {
+                        LapList(
+                            elapsedState = elapsedState,
+                            isRunning = isRunning,
+                            laps = laps,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                        )
+                    }
+
+                    }
                 }
 
                 // ---- controls ----
@@ -204,7 +215,6 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 1f.verticalGridUnitsAsDp())
                         .height(4f.verticalGridUnitsAsDp())
                         .padding(start = 2f.gridUnitsAsDp()),
                     verticalAlignment = Alignment.CenterVertically,
