@@ -1,30 +1,36 @@
-# LP3-StopWatch
+# Stopwatch for the Light Phone III
 
-A stopwatch for the **Light Phone 3**, built under the DailyHobbyist name.
+A simple stopwatch tool for the Light Phone III. Built with the
+[light-sdk](https://github.com/lightphone/light-sdk).
 
-- **Package:** `com.dailyhobbyist.stopwatch`
-- **Version:** 4.0 (versionCode 4)
+## What it does
 
-## What this repo is
+- Big time display. Tap it to start or stop. Double tap it to record a lap.
+- RESET, STOP and LAP buttons. You can also use the volume keys:
+  volume down starts or stops, volume up records a lap. When the watch is
+  stopped, volume up resets it.
+- Saves every run when you reset it. Runs are kept in History.
+- In History you can open a run to see each lap, or tap the X to remove it.
+- Gentle haptics on every button. The screen caps at 99:59.99 and 99 laps.
 
-This is a full checkout of the Light Phone SDK. **The app itself lives in `tool/`** —
-that's the only folder that holds DailyHobbyist code. Everything else is upstream SDK
-scaffolding that has to be present for the build to work.
+## Install
 
-- `tool/lighttool.toml` — the app manifest, and the **single source of truth for the
-  version number**. Both `versionCode` and `versionName` get bumped on every build.
-- `tool/` — the app source.
+Download the APK from the
+[releases page](https://github.com/fenleon/stopwatch/releases) and install it
+on your Light Phone III. The phone must allow external tools
+(Settings → External tools → "All tools"), because the APK is not signed by
+Light.
 
-## Building
+## Build
 
-Built with the Light Phone SDK toolchain and sideloaded onto the device.
+```sh
+./gradlew :tool:assembleRelease
+```
 
-`serverPackage` in `tool/lighttool.toml` must be `com.lightos` for a real device. The
-value `com.thelightphone.sdk.emulator` is for the SDK emulator only — committing that
-value by mistake produces a build that will not run on the phone.
+The APK ends up in `tool/build/outputs/apk/release/`. It signs with the
+light-sdk dev keystore. The build expects the light-sdk project next to this
+folder (see `settings.gradle.kts`).
 
-## Related
+## License
 
-Other DailyHobbyist Light Phone 3 apps live in sibling repos under `cmg-ops`
-(LP3-Lists, LP3-Bible, LP3-Budget, LP3-DrawPad, LP3-Rolodex, LP3-Calculator,
-LP3-Routines, and others).
+Same license as the project this was forked from. See LICENSE.

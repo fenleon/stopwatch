@@ -33,6 +33,8 @@ android {
             signingConfig = signingConfigs.getByName("lightsdkDev")
         }
         release {
+            isMinifyEnabled = true
+            isShrinkResources = true
             signingConfig = signingConfigs.getByName("lightsdkDev")
         }
     }
