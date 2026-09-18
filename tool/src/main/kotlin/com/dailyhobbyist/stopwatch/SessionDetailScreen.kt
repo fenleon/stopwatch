@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
@@ -117,7 +118,8 @@ class SessionDetailScreen(
                     LightLazyScrollView(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(rowHeightDp * 6 + 1.dp),
+                            .weight(1f, fill = false)
+                            .heightIn(max = rowHeightDp * 6 + 1.dp),
                         scrollBarPosition = LightScrollBarPosition.Inside,
                         uniformItemHeightGridUnits = rowHeightDp.value / gridUnitDp,
                     ) {

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
@@ -41,6 +42,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import kotlin.math.max
 import androidx.compose.material3.Text
 import com.thelightphone.sdk.InitialScreen
 import com.thelightphone.sdk.LightScreen
@@ -79,6 +81,12 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
         val elapsedState = viewModel.elapsedMs.collectAsState()
 
         val focusRequester = remember { FocusRequester() }
+        val configuration = LocalConfiguration.current
+        // the timer grows with the long side in landscape
+        val landscapeScale = max(
+            1f,
+            configuration.screenWidthDp.toFloat() / configuration.screenHeightDp,
+        )
         val haptic = rememberLightHapticClick()
 
         LightTheme(colors = themeColors) {
@@ -165,6 +173,7 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                     FixedWidthTime(
                         text = formatTime(elapsed),
                         style = LightThemeTokens.typography.title,
+                        scale = landscapeScale,
                     )
                 }
 
@@ -175,7 +184,9 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                     elapsedState = elapsedState,
                     isRunning = isRunning,
                     laps = laps,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f, fill = false),
                 )
 
                 // ---- controls ----

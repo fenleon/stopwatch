@@ -23,7 +23,7 @@ import com.thelightphone.sdk.ui.designVerticalPxToSp
 @Composable
 internal fun TimeCell(text: String, modifier: Modifier = Modifier) {
     val raw = LightThemeTokens.typography.copy
-    val style = scaledTimeStyleInternal(raw).copy(fontFeatureSettings = "tnum")
+    val style = scaledTimeStyle(raw).copy(fontFeatureSettings = "tnum")
     val measurer = rememberTextMeasurer()
     val density = LocalDensity.current
     // widest reachable format: the 99:59 display cap means H:MM:SS.hh
@@ -39,15 +39,15 @@ internal fun TimeCell(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-internal fun scaledCopyStyle(): TextStyle = scaledTimeStyleInternal(LightThemeTokens.typography.copy)
+internal fun scaledCopyStyle(): TextStyle = scaledTimeStyle(LightThemeTokens.typography.copy)
 
-internal @Composable fun scaledTimeStyleInternal(style: TextStyle): TextStyle = style.copy(
-    fontSize = style.fontSize.value.designVerticalPxToSp(),
+internal @Composable fun scaledTimeStyle(style: TextStyle, scale: Float = 1f): TextStyle = style.copy(
+    fontSize = (style.fontSize.value * scale).designVerticalPxToSp(),
     lineHeight = if (style.lineHeight.isSpecified) {
-        style.lineHeight.value.designVerticalPxToSp()
+        (style.lineHeight.value * scale).designVerticalPxToSp()
     } else style.lineHeight,
     letterSpacing = if (style.letterSpacing.isSpecified) {
-        style.letterSpacing.value.designVerticalPxToSp()
+        (style.letterSpacing.value * scale).designVerticalPxToSp()
     } else style.letterSpacing,
     color = LightThemeTokens.colors.content,
 )
@@ -61,10 +61,11 @@ internal @Composable fun scaledTimeStyleInternal(style: TextStyle): TextStyle = 
 internal fun FixedWidthTime(
     text: String,
     style: TextStyle,
+    scale: Float = 1f,
 ) {
     // Scale the token style the same way LightText does (design px → sp),
     // then measure and render with that one style so slots line up exactly.
-    val scaled = scaledTimeStyleInternal(style)
+    val scaled = scaledTimeStyle(style, scale)
 
     val measurer = rememberTextMeasurer()
     val density = LocalDensity.current
