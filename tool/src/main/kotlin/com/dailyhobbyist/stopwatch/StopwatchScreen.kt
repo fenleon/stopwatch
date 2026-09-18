@@ -143,7 +143,7 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                 val pendingToggle = remember { mutableStateOf<Job?>(null) }
                 Box(
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(1.4f)
                         .fillMaxWidth()
                         .pointerInput(Unit) {
                             detectTapGestures(
@@ -181,14 +181,19 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                 // ---- laps: exactly three rows visible, scrollbar only past that ----
                 // the live row reads the State itself, so the 30 fps ticker
                 // doesn't recompose the list — only that one row
-                LapList(
-                    elapsedState = elapsedState,
-                    isRunning = isRunning,
-                    laps = laps,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f, fill = false),
-                )
+                // no laps yet: the panel isn't composed at all (a LazyColumn
+                // would still fill the space), so the timer centres in the
+                // full content area
+                if (laps.isNotEmpty()) {
+                    LapList(
+                        elapsedState = elapsedState,
+                        isRunning = isRunning,
+                        laps = laps,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                    )
+                }
 
                 // ---- controls ----
                 // LAP sits centred between START/STOP and the right edge:

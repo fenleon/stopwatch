@@ -118,8 +118,7 @@ class SessionDetailScreen(
                     LightLazyScrollView(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1f, fill = false)
-                            .heightIn(max = rowHeightDp * 6 + 1.dp),
+                            .weight(1f),
                         scrollBarPosition = LightScrollBarPosition.Inside,
                         uniformItemHeightGridUnits = rowHeightDp.value / gridUnitDp,
                     ) {
