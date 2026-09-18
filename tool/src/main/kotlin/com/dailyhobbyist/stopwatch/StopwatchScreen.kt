@@ -60,6 +60,7 @@ import com.thelightphone.sdk.ui.LightThemeTokens
 import com.thelightphone.sdk.ui.LightTopBar
 import com.thelightphone.sdk.ui.LightTopBarCenter
 import com.thelightphone.sdk.ui.gridUnitsAsDp
+import com.thelightphone.sdk.ui.verticalGridUnitsAsDp
 
 @InitialScreen
 class StopwatchScreen(sealedActivity: SealedLightActivity) :
@@ -193,11 +194,13 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                 // LAP sits centred between START/STOP and the right edge:
                 // centres land at ~18% · 50% · 75% of the screen width.
                 val hasTime = elapsed > 0L || laps.isNotEmpty()
+                // vertical grid units: the bar keeps its portrait height in
+                // landscape (the width-based grid inflates there)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 1f.gridUnitsAsDp())
-                        .height(4f.gridUnitsAsDp())
+                        .padding(top = 1f.verticalGridUnitsAsDp())
+                        .height(4f.verticalGridUnitsAsDp())
                         .padding(start = 2f.gridUnitsAsDp()),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -226,7 +229,7 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
 private fun BarButton(label: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .height(4f.gridUnitsAsDp())
+            .height(4f.verticalGridUnitsAsDp())
             .lightClickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
