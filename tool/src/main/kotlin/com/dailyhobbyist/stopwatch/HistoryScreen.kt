@@ -160,7 +160,7 @@ private fun SessionRow(
                 },
             )
         } else {
-            TimeCell(text = compactTime(session.totalMs))
+            TimeCell(text = lapTime(session.totalMs))
             Spacer(modifier = Modifier.width(12.dp))
             // centred on the time line only: a bottom-aligned strip the
             // height of that line, X centred inside it. The start offset

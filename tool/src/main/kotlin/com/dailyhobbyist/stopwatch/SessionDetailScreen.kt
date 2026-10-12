@@ -164,8 +164,8 @@ private fun LapDetailRow(
             modifier = Modifier.weight(1f),
         )
         Spacer(modifier = Modifier.width(12.dp))
-        TimeCell(text = compactTime(split))
+        TimeCell(text = lapTime(split))
         Spacer(modifier = Modifier.width(14.dp))
-        TimeCell(text = compactTime(total))
+        TimeCell(text = lapTime(total))
     }
 }

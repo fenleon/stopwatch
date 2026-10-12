@@ -47,7 +47,6 @@ import androidx.compose.material3.Text
 import com.thelightphone.sdk.InitialScreen
 import com.thelightphone.sdk.LightScreen
 import com.thelightphone.sdk.SealedLightActivity
-import com.thelightphone.sdk.ui.LightBarButton
 import com.thelightphone.sdk.ui.lightClickable
 import com.thelightphone.sdk.ui.LightLazyScrollView
 import com.thelightphone.sdk.ui.LightScrollBarPosition
@@ -125,11 +124,18 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
             ) {
                 LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
-                LightTopBar(
-                    rightButton = LightBarButton.Text("HISTORY") {
-                        navigateTo(screenFactory = { sealed -> HistoryScreen(sealed) })
-                    },
-                )
+                Box {
+                    LightTopBar()
+                    TopBarTextButton(
+                        text = "HISTORY",
+                        onClick = {
+                            navigateTo(screenFactory = { sealed -> HistoryScreen(sealed) })
+                        },
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 1f.gridUnitsAsDp()),
+                    )
+                }
 
                 // ---- content zone: everything between the bars. The bar
                 // itself is OUTSIDE this box, hard-anchored to the bottom.
@@ -147,7 +153,7 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                     val pendingToggle = remember { mutableStateOf<Job?>(null) }
                     Box(
                         modifier = Modifier
-                            .weight(1.4f)
+                            .weight(1f)
                             .fillMaxWidth()
                             .pointerInput(Unit) {
                                 detectTapGestures(
@@ -193,9 +199,11 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                             elapsedState = elapsedState,
                             isRunning = isRunning,
                             laps = laps,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f),
+                            // fixed measured height (exactly three rows) — a
+                            // weight() share here imposed fixed constraints
+                            // that silently overrode LapList's own .height(),
+                            // leaving the panel a few px short of 3 rows
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
 
@@ -283,7 +291,10 @@ private fun LapList(
     val gridUnitDp = LocalConfiguration.current.screenWidthDp / 27f
 
     LightLazyScrollView(
-        modifier = modifier.height(rowHeightDp * 3 + 1.dp),
+        // exactly three rows + a few px headroom: covers real-layout vs
+        // measurer rounding (≤1 px/row) without ever peeking row 4's text
+        // (rows carry 10 dp top padding — a sliver shows blank space only)
+        modifier = modifier.height(rowHeightDp * 3 + 6.dp),
         listState = listState,
         scrollBarPosition = LightScrollBarPosition.Inside,
         uniformItemHeightGridUnits = rowHeightDp.value / gridUnitDp,
@@ -335,9 +346,9 @@ private fun LapRow(
         )
         Spacer(modifier = Modifier.width(12.dp))
         // lap split and running total — same size, each anchored in its own column
-        TimeCell(text = compactTime(split))
+        TimeCell(text = lapTime(split))
         Spacer(modifier = Modifier.width(14.dp))
-        TimeCell(text = compactTime(total))
+        TimeCell(text = lapTime(total))
     }
 }
 
