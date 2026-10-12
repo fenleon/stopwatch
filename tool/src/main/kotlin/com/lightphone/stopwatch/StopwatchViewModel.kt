@@ -1,4 +1,4 @@
-package com.dailyhobbyist.stopwatch
+package com.lightphone.stopwatch
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

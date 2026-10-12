@@ -1,5 +1,5 @@
 [tool]
-id = "com.dailyhobbyist.stopwatch"
+id = "com.lightphone.stopwatch"
 label = "Stopwatch"
 versionCode = 34
 versionName = "5.6.5"

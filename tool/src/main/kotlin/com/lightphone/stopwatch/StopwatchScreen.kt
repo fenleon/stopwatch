@@ -1,4 +1,4 @@
-package com.dailyhobbyist.stopwatch
+package com.lightphone.stopwatch
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable

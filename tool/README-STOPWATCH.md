@@ -1,6 +1,6 @@
 # Stopwatch for Light Phone 3
 
-**Package:** `com.dailyhobbyist.stopwatch` · **Version:** 2.0 (v2)
+**Package:** `com.lightphone.stopwatch` · **Version:** 2.0 (v2)
 
 A full-capability stopwatch built natively with the Light Phone SDK
 (Kotlin + Jetpack Compose), same structure as the audiobook, Bible,

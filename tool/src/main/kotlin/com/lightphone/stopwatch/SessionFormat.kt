@@ -1,4 +1,4 @@
-package com.dailyhobbyist.stopwatch
+package com.lightphone.stopwatch
 
 import java.text.SimpleDateFormat
 import java.util.Date

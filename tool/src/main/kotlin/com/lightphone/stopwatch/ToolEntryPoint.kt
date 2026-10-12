@@ -1,4 +1,4 @@
-package com.dailyhobbyist.stopwatch
+package com.lightphone.stopwatch
 
 import com.thelightphone.sdk.EntryPoint
 import com.thelightphone.sdk.LightEntryPoint
