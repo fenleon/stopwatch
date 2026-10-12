@@ -1,7 +1,6 @@
 package com.dailyhobbyist.stopwatch
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,11 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +32,6 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.platform.LocalConfiguration
@@ -143,37 +137,12 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                 ) {
                     Column(modifier = Modifier.fillMaxSize()) {
                 // ---- big time display, centred like the LightOS Timer ----
-                    // Tap = start/stop, double-tap = lap. The toggle fires after a
-                    // short fuse so the second tap of a double can cancel it and
-                    // lap instead — the watch never visibly pauses mid-double-tap.
-                    val scope = rememberCoroutineScope()
-                    val pendingToggle = remember { mutableStateOf<Job?>(null) }
+                    // display only: start/stop and laps live on the bottom bar
+                    // and the volume rocker, not on the timer itself
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxWidth()
-                            .pointerInput(Unit) {
-                                detectTapGestures(
-                                    onTap = {
-                                        val pending = pendingToggle.value
-                                        if (pending?.isActive == true) {
-                                            // second tap of a double: light tick + lap
-                                            pending.cancel()
-                                            pendingToggle.value = null
-                                            viewModel.lap()
-                                        } else {
-                                            // every tap buzzes immediately (chats'
-                                            // double-tap feel); the toggle itself
-                                            // waits on the fuse so a double-tap
-                                            // never shows a paused frame
-                                            pendingToggle.value = scope.launch {
-                                                delay(200L)
-                                                viewModel.startStop()
-                                            }
-                                        }
-                                    },
-                                )
-                            },
+                            .fillMaxWidth(),
                         contentAlignment = Alignment.Center,
                     ) {
                         FixedWidthTime(
