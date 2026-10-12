@@ -86,7 +86,6 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
             1f,
             configuration.screenWidthDp.toFloat() / configuration.screenHeightDp,
         )
-        val haptic = rememberLightHapticClick()
 
         LightTheme(colors = themeColors) {
             Column(
@@ -106,14 +105,12 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                         if (event.type != KeyEventType.KeyUp) return@onPreviewKeyEvent false
                         when (event.key) {
                             Key.VolumeDown -> {
-                                haptic()
                                 viewModel.startStop()
                                 true
                             }
                             Key.VolumeUp -> {
                                 // running: lap; stopped: reset — silent at 0
                                 if (elapsed > 0L || laps.isNotEmpty()) {
-                                    haptic()
                                     if (isRunning) viewModel.lap() else viewModel.reset()
                                 }
                                 true
@@ -163,14 +160,12 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                                             // second tap of a double: light tick + lap
                                             pending.cancel()
                                             pendingToggle.value = null
-                                            haptic()
                                             viewModel.lap()
                                         } else {
                                             // every tap buzzes immediately (chats'
                                             // double-tap feel); the toggle itself
                                             // waits on the fuse so a double-tap
                                             // never shows a paused frame
-                                            haptic()
                                             pendingToggle.value = scope.launch {
                                                 delay(200L)
                                                 viewModel.startStop()
