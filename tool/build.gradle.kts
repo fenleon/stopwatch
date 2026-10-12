@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp) // registry codegen: the SDK plugin self-adds its processor when ksp is applied
     alias(libs.plugins.light.sdk)
 }
 
