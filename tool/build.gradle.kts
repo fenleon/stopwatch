@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.light.sdk)
 }
 
@@ -12,7 +11,13 @@ android {
 
     signingConfigs {
         create("lightsdkDev") {
-            storeFile = file("../../light-sdk/sdk/keys/lightsdk-dev.jks")
+            // Workspace path first; inside an SDK checkout (Light's Tool
+            // Library builder stages tool/ into the baked-in SDK repo) the
+            // same dev keystore lives at ../sdk/keys.
+            storeFile = file(
+                listOf("../../light-sdk/sdk/keys/lightsdk-dev.jks", "../sdk/keys/lightsdk-dev.jks")
+                    .map(::file).first { it.exists() }
+            )
             storePassword = "android"
             keyAlias = "lightsdk-dev"
             keyPassword = "android"
@@ -62,8 +67,14 @@ configurations.configureEach {
     exclude(group = "com.github.markusfisch")
 }
 
+// Inside an SDK checkout the SDK modules are sibling projects; in this
+// workspace the included ../light-sdk build substitutes the module artifacts.
+val inSdkRepo = file("../sdk").exists()
+
 dependencies {
-    implementation(libs.sdk.client)
+    implementation(
+        if (inSdkRepo) project(":sdk:client")
+        else "com.thelightphone:sdk-client"   // LightScreen, LightActivity
+    )
     testImplementation(libs.kotlin.test)
-    ksp(libs.androidx.room.compiler)
 }
