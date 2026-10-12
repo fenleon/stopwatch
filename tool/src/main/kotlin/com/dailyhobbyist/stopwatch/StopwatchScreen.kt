@@ -126,9 +126,6 @@ class StopwatchScreen(sealedActivity: SealedLightActivity) :
                 LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
                 LightTopBar(
-                    // top-bar text actions render at the Button size
-                    // (native Calendar EDIT spec)
-                    textVariant = LightTextVariant.Button,
                     rightButton = LightBarButton.Text("HISTORY") {
                         navigateTo(screenFactory = { sealed -> HistoryScreen(sealed) })
                     },
